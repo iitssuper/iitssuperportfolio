@@ -4,12 +4,10 @@
 <meta charset="UTF-8" />
 <link rel="shortcut icon" href="images/killuaSilly.webp" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 <title>Super — Programming Portfolio</title>
 <style>
   /* ============ RESET & BASE ============ */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
   :root {
@@ -25,18 +23,10 @@
     --font-main: "Lexend", sans-serif;
   }
 
-  div {
-    -webkit-user-select:none;
-    user-select:none;
-  }
-
-  p {
-    -webkit-user-select:none;
-    user-select:none;
-  }
+  div { -webkit-user-select:none; user-select:none; }
+  p   { -webkit-user-select:none; user-select:none; }
 
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--navy);
     color: var(--white);
@@ -98,6 +88,61 @@
   .nav-links a:hover { color: var(--white); }
   .nav-links a:hover::after { width: 100%; }
 
+  /* Hamburger — hidden on desktop */
+  .hamburger {
+    display: none;
+    flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: none;
+    padding: 4px; z-index: 1100;
+  }
+  .hamburger span {
+    display: block; width: 26px; height: 2.5px;
+    background: var(--glow); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s, background 0.2s;
+    box-shadow: 0 0 6px var(--glow);
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+  /* Mobile slide-down menu */
+  .mobile-menu {
+    /* Never display:none — that kills the max-height transition */
+    display: flex;
+    flex-direction: column;
+    position: fixed; top: 64px; left: 0; width: 100%;
+    box-sizing: border-box;
+    background: rgba(10,25,47,0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1.5px solid rgba(94,200,250,0.2);
+    z-index: 999;
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    transition: max-height 0.38s cubic-bezier(.25,.8,.25,1),
+                visibility 0s linear 0.38s;
+  }
+  .mobile-menu.open {
+    max-height: calc(100vh - 64px);
+    visibility: visible;
+    pointer-events: auto;
+    overflow-y: auto;
+    transition: max-height 0.38s cubic-bezier(.25,.8,.25,1),
+                visibility 0s linear 0s;
+  }
+  .mobile-menu a {
+    color: var(--bolt); text-decoration: none; font-weight: 700;
+    font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 16px 32px;
+    border-bottom: 1px solid rgba(94,200,250,0.08);
+    transition: color 0.2s, background 0.2s;
+    display: block;
+  }
+  .mobile-menu a:first-child { margin-top: 10px; }
+  .mobile-menu a:last-child  { border-bottom: none; margin-bottom: 10px; }
+  .mobile-menu a:hover { color: var(--glow); background: rgba(91,200,250,0.05); }
+
   /* ============ SECTIONS ============ */
   section {
     min-height: 100vh; padding: 100px 60px 60px;
@@ -109,7 +154,6 @@
     display: flex; align-items: center; justify-content: center;
     gap: 60px; flex-wrap: wrap;
   }
-
   .home-left { flex: 1; min-width: 280px; max-width: 540px; }
   .home-greeting {
     font-size: 1rem; color: var(--sky); letter-spacing: 3px;
@@ -117,95 +161,76 @@
   }
   .home-name {
     font-size: clamp(2.2rem, 5vw, 3.6rem);
-    font-weight: 900; line-height: 1.1;
-    color: var(--white);
+    font-weight: 900; line-height: 1.1; color: var(--white);
     text-shadow: 0 0 30px rgba(91,200,250,0.3);
   }
   .home-name .accent { color: var(--glow); }
-
   .typewriter-wrap {
     margin: 18px 0 30px;
-    font-size: 1.25rem; font-weight: 700; color: var(--bolt);
-    min-height: 2rem;
+    font-size: 1.25rem; font-weight: 700; color: var(--bolt); min-height: 2rem;
   }
   .typewriter-wrap .label { color: var(--sky); }
   #typewriter-text {
     color: var(--white);
     border-right: 2px solid var(--glow);
     animation: blink 0.7s step-end infinite;
-    padding-right: 3px;
-    display: inline-block; 
-    line-height: 1;
-}
+    padding-right: 3px; display: inline-block; line-height: 1;
+  }
   @keyframes blink { 50% { border-color: transparent; } }
-
   .home-btns { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
 
   .btn-primary, .btn-secondary {
     padding: 13px 28px; border-radius: 50px;
     font-weight: 800; font-size: 0.95rem; letter-spacing: 1px;
-    text-decoration: none; border: none;
-    cursor: none; position: relative; overflow: hidden;
+    text-decoration: none; border: none; cursor: none;
+    position: relative; overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
     display: inline-flex; align-items: center; gap: 8px;
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--blue), var(--glow));
-    color: var(--navy);
-    box-shadow: 0 4px 20px rgba(91,200,250,0.35);
+    color: var(--navy); box-shadow: 0 4px 20px rgba(91,200,250,0.35);
   }
   .btn-secondary {
-    background: transparent;
-    color: var(--glow);
-    border: 2px solid var(--glow);
-    box-shadow: 0 4px 20px rgba(91,200,250,0.1);
+    background: transparent; color: var(--glow);
+    border: 2px solid var(--glow); box-shadow: 0 4px 20px rgba(91,200,250,0.1);
   }
   .btn-primary::before, .btn-secondary::before {
     content: ''; position: absolute; inset: 0;
     background: rgba(255,255,255,0.15);
-    transform: translateX(-100%) skewX(-20deg);
-    transition: transform 0.4s;
+    transform: translateX(-100%) skewX(-20deg); transition: transform 0.4s;
   }
   .btn-primary:hover::before, .btn-secondary:hover::before { transform: translateX(150%) skewX(-20deg); }
-  .btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(91,200,250,0.55); }
-  .btn-secondary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(91,200,250,0.3); background: rgba(91,200,250,0.08); }
+  .btn-primary:hover  { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(91,200,250,0.55); }
+  .btn-secondary:hover{ transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(91,200,250,0.3); background: rgba(91,200,250,0.08); }
 
   /* HOME RIGHT - STATS CARD */
   .home-right { flex: 0 0 auto; }
   .stats-card {
-    background: var(--card-bg);
-    border: 1.5px solid rgba(94,200,250,0.25);
-    border-radius: var(--radius);
-    padding: 36px 40px;
-    min-width: 280px;
-    backdrop-filter: blur(16px);
-    position: relative; overflow: hidden;
+    background: var(--card-bg); border: 1.5px solid rgba(94,200,250,0.25);
+    border-radius: var(--radius); padding: 36px 40px; min-width: 280px;
+    backdrop-filter: blur(16px); position: relative; overflow: hidden;
     box-shadow: 0 0 40px rgba(91,200,250,0.1), inset 0 0 60px rgba(13,33,55,0.5);
     transition: transform 0.3s, box-shadow 0.3s;
   }
   .stats-card:hover { transform: translateY(-6px) rotate(0.5deg); box-shadow: 0 0 60px rgba(91,200,250,0.22); }
-  .stats-card-header {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
-  }
+  .stats-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
   .killua-avatar {
     width: 72px; height: 72px; border-radius: 50%;
     border: 3px solid var(--glow);
     background: linear-gradient(135deg, var(--deep), var(--blue));
     display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; box-shadow: 0 0 16px var(--glow);
-    overflow: hidden;
+    font-size: 2rem; box-shadow: 0 0 16px var(--glow); overflow: hidden;
   }
   .killua-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .killua-avatar .placeholder-icon { font-size: 2.2rem; }
   .stats-card-name { font-size: 1.1rem; font-weight: 800; color: var(--white); }
   .stats-card-sub { font-size: 0.8rem; color: var(--sky); margin-top: 2px; }
-
   .stats-divider {
     width: 100%; height: 1px;
     background: linear-gradient(90deg, transparent, var(--glow), transparent);
     margin-bottom: 24px; opacity: 0.4;
   }
-
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .stat-item { text-align: center; }
   .stat-number {
@@ -213,12 +238,8 @@
     text-shadow: 0 0 16px var(--glow); line-height: 1;
   }
   .stat-label { font-size: 0.78rem; color: var(--bolt); margin-top: 4px; letter-spacing: 0.5px; }
-
   .stat-item.wide { grid-column: 1 / -1; }
-  .stat-item.wide .stat-label-silly {
-    font-size: 0.72rem; color: var(--sky); margin-top: 2px; font-style: italic;
-  }
-
+  .stat-item.wide .stat-label-silly { font-size: 0.72rem; color: var(--sky); margin-top: 2px; font-style: italic; }
   .lightning-deco {
     position: absolute; font-size: 5rem; opacity: 0.06;
     top: 10px; right: 10px; pointer-events: none;
@@ -230,8 +251,7 @@
   .section-title {
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 900; color: var(--white);
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
   }
   .section-title .bolt { color: var(--glow); text-shadow: 0 0 12px var(--glow); }
   .section-subtitle { color: var(--sky); font-size: 0.95rem; margin-bottom: 50px; letter-spacing: 0.5px; }
@@ -239,13 +259,10 @@
   /* ============ ABOUT ============ */
   #about { max-width: 1100px; margin: 0 auto; }
   .about-intro-card {
-    background: var(--card-bg);
-    border: 1.5px solid rgba(94,200,250,0.2);
-    border-radius: var(--radius);
-    padding: 32px 36px; margin-bottom: 50px;
+    background: var(--card-bg); border: 1.5px solid rgba(94,200,250,0.2);
+    border-radius: var(--radius); padding: 32px 36px; margin-bottom: 50px;
     display: flex; gap: 28px; align-items: center; flex-wrap: wrap;
-    backdrop-filter: blur(12px);
-    transition: box-shadow 0.3s;
+    backdrop-filter: blur(12px); transition: box-shadow 0.3s;
   }
   .about-intro-card:hover { box-shadow: 0 0 40px rgba(91,200,250,0.15); }
   .about-avatar {
@@ -253,8 +270,7 @@
     border: 3px solid var(--glow); flex-shrink: 0;
     background: linear-gradient(135deg, var(--deep), var(--blue));
     display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; overflow: hidden;
-    box-shadow: 0 0 24px rgba(91,200,250,0.3);
+    font-size: 3rem; overflow: hidden; box-shadow: 0 0 24px rgba(91,200,250,0.3);
   }
   .about-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .about-text h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
@@ -271,29 +287,20 @@
     width: 2px; background: linear-gradient(180deg, var(--glow), var(--blue), transparent);
     border-radius: 2px;
   }
-  .roadmap-item {
-    position: relative; margin-bottom: 32px;
-    animation: fadeSlide 0.5s ease both;
-  }
-  @keyframes fadeSlide { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:none; } }
+  .roadmap-item { position: relative; margin-bottom: 32px; animation: fadeSlide 0.5s ease both; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:none} }
   .roadmap-dot {
     position: absolute; left: -25px; top: 12px;
     width: 14px; height: 14px; border-radius: 50%;
-    background: var(--glow); border: 2px solid var(--navy);
-    box-shadow: 0 0 10px var(--glow);
+    background: var(--glow); border: 2px solid var(--navy); box-shadow: 0 0 10px var(--glow);
   }
   .roadmap-card {
-    background: var(--card-bg);
-    border: 1.5px solid rgba(94,200,250,0.18);
-    border-radius: 14px; padding: 20px 24px;
-    backdrop-filter: blur(10px);
+    background: var(--card-bg); border: 1.5px solid rgba(94,200,250,0.18);
+    border-radius: 14px; padding: 20px 24px; backdrop-filter: blur(10px);
     transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
   }
   .roadmap-card:hover { transform: translateX(6px); box-shadow: 0 0 30px rgba(91,200,250,0.15); border-color: rgba(91,200,250,0.4); }
-  .roadmap-year {
-    font-size: 0.78rem; color: var(--glow); font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;
-  }
+  .roadmap-year { font-size: 0.78rem; color: var(--glow); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
   .roadmap-card h4 { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
   .roadmap-card p { font-size: 0.88rem; color: var(--bolt); line-height: 1.6; }
   .roadmap-badge {
@@ -304,25 +311,20 @@
 
   /* ============ GAMES ============ */
   #games { max-width: 1100px; margin: 0 auto; }
-
   .games-slider-wrapper { position: relative; overflow: hidden; }
   .games-slider {
-  display: flex; gap: 28px; transition: transform 0.45s cubic-bezier(.25,.8,.25,1);
-  cursor: grab; user-select: none; 
-  padding: 20px 10px 40px 10px; 
-}
+    display: flex; gap: 28px; transition: transform 0.45s cubic-bezier(.25,.8,.25,1);
+    cursor: grab; user-select: none; padding: 20px 10px 40px 10px;
+  }
   .games-slider:active { cursor: grabbing; }
-
   .game-card {
     flex: 0 0 280px; background: var(--card-bg);
     border: 1.5px solid rgba(94,200,250,0.2);
-    border-radius: var(--radius); overflow: hidden;
-    position: relative;
+    border-radius: var(--radius); overflow: hidden; position: relative;
     transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     backdrop-filter: blur(12px);
   }
   .game-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 40px rgba(91,200,250,0.2); border-color: rgba(91,200,250,0.5); }
-
   .game-card-img {
     width: 100%; height: 168px; object-fit: cover;
     background: linear-gradient(135deg, var(--deep) 0%, var(--blue) 100%);
@@ -332,12 +334,7 @@
   }
   .game-card-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
   .game-card-img .img-placeholder { pointer-events: none; }
-
-  .game-card.is-coming-soon .game-card-overlay {
-    color: var(--sky);
-    text-shadow: 0 0 10px var(--sky);
-  }
-
+  .game-card.is-coming-soon .game-card-overlay { color: var(--sky); text-shadow: 0 0 10px var(--sky); }
   .killua-mini {
     position: absolute; bottom: -2px; right: 10px;
     width: 56px; height: 56px; z-index: 2;
@@ -352,79 +349,53 @@
     font-size: 1.6rem; box-shadow: 0 0 10px var(--glow);
   }
   @keyframes killuaBounce {
-    0%,100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-8px) rotate(3deg); }
+    0%,100%{transform:translateY(0) rotate(-3deg)}
+    50%{transform:translateY(-8px) rotate(3deg)}
   }
-
   .game-card-body { padding: 18px 18px 20px; }
   .game-title { font-size: 1rem; font-weight: 800; margin-bottom: 6px; color: var(--white); }
-  .game-platform {
-    font-size: 0.8rem; color: var(--sky); font-weight: 600;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .game-platform .platform-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--glow); box-shadow: 0 0 6px var(--glow);
-  }
-
-  .game-card-link {
-    display: block; text-decoration: none; color: inherit;
-    position: relative;
-  }
+  .game-platform { font-size: 0.8rem; color: var(--sky); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+  .game-platform .platform-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--glow); box-shadow: 0 0 6px var(--glow); }
+  .game-card-link { display: block; text-decoration: none; color: inherit; position: relative; }
   .game-card-overlay {
     position: absolute; inset: 0;
-    background: rgba(10, 25, 47, 0.7); backdrop-filter: blur(4px);
+    background: rgba(10,25,47,0.7); backdrop-filter: blur(4px);
     opacity: 0; transition: opacity 0.3s;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; color: var(--glow);
-    text-shadow: 0 0 10px var(--glow);
-    z-index: 10;
+    font-weight: 800; font-size: 0.9rem; letter-spacing: 1px;
+    color: var(--glow); text-shadow: 0 0 10px var(--glow); z-index: 10;
   }
   .game-card:hover .game-card-overlay { opacity: 1; }
-
-  /* SLIDER ARROWS */
   .slider-controls { display: flex; justify-content: center; gap: 16px; margin-top: 28px; }
   .slider-btn {
     width: 48px; height: 48px; border-radius: 50%;
     border: 2px solid var(--glow); background: var(--card-bg);
-    color: var(--glow); font-size: 1.3rem;
-    cursor: none; display: flex; align-items: center; justify-content: center;
+    color: var(--glow); font-size: 1.3rem; cursor: none;
+    display: flex; align-items: center; justify-content: center;
     transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 0 10px rgba(91,200,250,0.15);
   }
-  .slider-btn:hover {
-    background: var(--glow); color: var(--navy);
-    transform: scale(1.15); box-shadow: 0 0 20px rgba(91,200,250,0.5);
-  }
+  .slider-btn:hover { background: var(--glow); color: var(--navy); transform: scale(1.15); box-shadow: 0 0 20px rgba(91,200,250,0.5); }
   .slider-dots { display: flex; align-items: center; gap: 8px; margin-top: 16px; justify-content: center; }
-  .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(91,200,250,0.3); transition: background 0.3s, transform 0.3s;
-  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(91,200,250,0.3); transition: background 0.3s, transform 0.3s; }
   .dot.active { background: var(--glow); transform: scale(1.4); box-shadow: 0 0 8px var(--glow); }
 
   /* ============ CONTACT ============ */
   #contact {
     display: flex; flex-direction: column; align-items: center;
-    justify-content: center; max-width: 700px; margin: 0 auto;
-    text-align: center;
+    justify-content: center; max-width: 700px; margin: 0 auto; text-align: center;
   }
   #contact .section-title { justify-content: center; }
-
   .discord-card {
-    background: var(--card-bg);
-    border: 1.5px solid rgba(94,200,250,0.25);
+    background: var(--card-bg); border: 1.5px solid rgba(94,200,250,0.25);
     border-radius: var(--radius); padding: 44px 50px;
-    width: 100%; max-width: 420px;
-    position: relative; overflow: hidden;
-    backdrop-filter: blur(16px);
-    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%; max-width: 420px; position: relative; overflow: hidden;
+    backdrop-filter: blur(16px); transition: transform 0.3s, box-shadow 0.3s;
   }
   .discord-card:hover { transform: translateY(-8px); box-shadow: 0 16px 50px rgba(91,200,250,0.22); }
   .discord-icon { font-size: 3.5rem; margin-bottom: 18px; filter: drop-shadow(0 0 12px #7289da); }
   .discord-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
   .discord-card p { color: var(--bolt); margin-bottom: 24px; font-size: 0.9rem; line-height: 1.6; }
-
   .btn-discord {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 14px 32px; border-radius: 50px;
@@ -438,8 +409,7 @@
   .btn-discord::before {
     content: ''; position: absolute; inset: 0;
     background: rgba(255,255,255,0.15);
-    transform: translateX(-100%) skewX(-20deg);
-    transition: transform 0.4s;
+    transform: translateX(-100%) skewX(-20deg); transition: transform 0.4s;
   }
   .btn-discord:hover::before { transform: translateX(150%) skewX(-20deg); }
   .btn-discord:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 35px rgba(88,101,242,0.55); }
@@ -451,9 +421,6 @@
     border-top: 1px solid rgba(94,200,250,0.1);
   }
 
-  /* ============ LIGHTNING BOLT DECO ============ */
-  .bolt-tag { color: var(--glow); text-shadow: 0 0 10px var(--glow); }
-
   /* SKATEBOARD DECO */
   .skater {
     position: fixed; bottom: 30px; left: -120px;
@@ -462,37 +429,27 @@
     pointer-events: none; filter: drop-shadow(0 0 6px var(--glow));
   }
   @keyframes skate {
-    0% { left: -120px; transform: scaleX(1); }
+    0%  { left: -120px; transform: scaleX(1); }
     49% { left: calc(100vw + 60px); transform: scaleX(1); }
     50% { left: calc(100vw + 60px); transform: scaleX(-1); }
     99% { left: -120px; transform: scaleX(-1); }
-    100% { left: -120px; transform: scaleX(1); }
+    100%{ left: -120px; transform: scaleX(1); }
   }
 
-  /* FLOATING BOLTS */
+  /* FLOATING KILLUAS */
   .float-bolt {
     position: fixed; font-size: 1.4rem; z-index: 0; pointer-events: none;
     animation: floatBolt linear infinite; opacity: 0.25;
     color: var(--glow); filter: drop-shadow(0 0 4px var(--glow));
   }
   @keyframes floatBolt {
-    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    0%  { transform: translateY(100vh) rotate(0deg); opacity: 0; }
     10% { opacity: 0.3; }
     90% { opacity: 0.3; }
-    100% { transform: translateY(-60px) rotate(360deg); opacity: 0; }
+    100%{ transform: translateY(-60px) rotate(360deg); opacity: 0; }
   }
 
-  /* ============ RESPONSIVE ============ */
-  @media(max-width: 768px) {
-    section { padding: 90px 20px 50px; }
-    nav { padding: 0 20px; }
-    #home { flex-direction: column; align-items: flex-start; gap: 40px; padding-top: 100px; }
-    .home-right { align-self: stretch; }
-    .stats-card { min-width: 0; width: 100%; }
-    .discord-card { padding: 32px 24px; }
-  }
-
-  /* ============ SKILL BARS ============ */
+  /* SKILLS */
   .skills-section { margin-top: 50px; }
   .skills-title { font-size: 1.1rem; font-weight: 800; color: var(--glow); margin-bottom: 24px; }
   .skill-row { margin-bottom: 18px; }
@@ -505,38 +462,159 @@
     width: 0; transition: width 1.4s cubic-bezier(.25,.8,.25,1);
   }
 
-  /* ============ SCROLL REVEAL ============ */
+  /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: none; }
+
+  /* ================================================================
+     MOBILE STYLES — only kicks in at ≤768px
+     Desktop is completely untouched above this point.
+  ================================================================ */
+  @media (max-width: 768px) {
+
+    /* --- Restore cursor on touch --- */
+    body { cursor: auto; }
+    #cursor { display: none; }
+
+    /* --- Nav --- */
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }          /* hide desktop links */
+    .hamburger { display: flex; }          /* show burger */
+
+    /* --- Section base --- */
+    section { padding: 90px 18px 50px; }
+
+    /* --- HOME --- */
+    #home {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 32px;
+      padding-top: 90px;
+      min-height: unset;
+      padding-bottom: 60px;
+    }
+    .home-left { max-width: 100%; min-width: unset; }
+    .home-name { font-size: clamp(2rem, 10vw, 3rem); }
+    .typewriter-wrap { font-size: 1.05rem; margin: 14px 0 22px; }
+    .home-btns { gap: 12px; }
+    .btn-primary, .btn-secondary {
+      padding: 12px 22px; font-size: 0.88rem;
+      width: 100%; justify-content: center;
+    }
+
+    /* Stats card full-width */
+    .home-right { width: 100%; align-self: stretch; }
+    .stats-card { min-width: 0; width: 100%; padding: 28px 24px; }
+    .stat-number { font-size: 2rem; }
+
+    /* --- ABOUT --- */
+    #about { padding-left: 18px; padding-right: 18px; }
+    .about-intro-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 24px 20px;
+      gap: 18px;
+    }
+    .about-avatar { width: 100px; height: 100px; }
+    .about-text h3 { font-size: 1.2rem; }
+    .about-text p  { font-size: 0.9rem; }
+
+    /* Roadmap — shrink left offset so it doesn't get clipped */
+    .roadmap { padding-left: 26px; }
+    .roadmap-dot { left: -20px; width: 12px; height: 12px; }
+    .roadmap-card { padding: 16px 18px; }
+    .roadmap-card h4 img { width: 52px !important; }
+    .roadmap-year { font-size: 0.72rem; }
+    .roadmap-card h4 { font-size: 0.95rem; }
+    .roadmap-card p  { font-size: 0.83rem; }
+
+    /* --- GAMES --- */
+    #games { padding-left: 18px; padding-right: 18px; }
+
+    /* Make cards wider on mobile so they fill more of the screen */
+    .games-slider { gap: 16px; padding: 16px 4px 36px 4px; }
+    .game-card { flex: 0 0 calc(85vw - 36px); max-width: 320px; }
+    .game-card-img { height: 150px; }
+
+    .slider-btn { width: 42px; height: 42px; font-size: 1.1rem; }
+
+    /* --- CONTACT --- */
+    #contact { padding-left: 18px; padding-right: 18px; }
+    .discord-card { padding: 30px 20px; max-width: 100%; }
+    .btn-discord { padding: 13px 24px; font-size: 0.92rem; width: 100%; justify-content: center; }
+
+    /* --- FOOTER --- */
+    footer { padding: 24px 18px; font-size: 0.78rem; }
+    footer h4 { font-size: 0.9rem; margin-bottom: 6px; }
+
+    /* --- Hide excess floating Killuas on mobile (keep only 2) --- */
+    .float-bolt:nth-child(n+4) { display: none; }
+    .float-bolt img { width: 70px !important; }
+
+    /* Skater — smaller on mobile so it doesn't block content */
+    .skater img { width: 64px !important; }
+
+    /* --- Section title wrapping --- */
+    .section-title { font-size: clamp(1.4rem, 6vw, 2rem); flex-wrap: wrap; gap: 8px; }
+    .section-title img { width: 60px !important; }
+    .section-subtitle { font-size: 0.88rem; margin-bottom: 34px; }
+
+    /* Skill logo images */
+    .skill-row-top img { width: 28px !important; }
+  }
+
+  /* ── Extra-small phones ── */
+  @media (max-width: 400px) {
+    .home-name { font-size: clamp(1.75rem, 12vw, 2.5rem); }
+    .game-card { flex: 0 0 calc(92vw - 36px); }
+    .stats-card { padding: 22px 16px; }
+    .stat-number { font-size: 1.7rem; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Cursor -->
+<!-- Cursor (desktop only) -->
 <div id="cursor"></div>
 
 <!-- Lightning canvas -->
 <canvas id="lightning-canvas"></canvas>
 
-<!-- Floating bolts -->
-<div class="float-bolt" style="left:8%;animation-duration:7s;animation-delay:0s;font-size:1rem;"><img src="images/killuaSilly.webp" alt="" style="width: 150px;"></div>
-<div class="float-bolt" style="left:23%;animation-duration:9s;animation-delay:0s;"><img src="images/killuaSilly.webp" alt="" style="width: 150px;"></div>
-<div class="float-bolt" style="left:61%;animation-duration:6s;animation-delay:0s;font-size:1.1rem;"><img src="images/killuaSilly.webp" alt="" style="width: 150px;"></div>
-<div class="float-bolt" style="left:82%;animation-duration:11s;animation-delay:0s;font-size:0.9rem;"><img src="images/killuaSilly.webp" alt="" style="width: 150px;"></div>
-<div class="float-bolt" style="left:45%;animation-duration:8s;animation-delay:0s;font-size:1.3rem;"><img src="images/killuaSilly.webp" alt="" style="width: 150px;"></div>
+<!-- Floating Killuas -->
+<div class="float-bolt" style="left:8%;animation-duration:7s;animation-delay:0s;font-size:1rem;"><img src="images/killuaSilly.webp" alt="" style="width:150px;"></div>
+<div class="float-bolt" style="left:23%;animation-duration:9s;animation-delay:0s;"><img src="images/killuaSilly.webp" alt="" style="width:150px;"></div>
+<div class="float-bolt" style="left:61%;animation-duration:6s;animation-delay:0s;font-size:1.1rem;"><img src="images/killuaSilly.webp" alt="" style="width:150px;"></div>
+<div class="float-bolt" style="left:82%;animation-duration:11s;animation-delay:0s;font-size:0.9rem;"><img src="images/killuaSilly.webp" alt="" style="width:150px;"></div>
+<div class="float-bolt" style="left:45%;animation-duration:8s;animation-delay:0s;font-size:1.3rem;"><img src="images/killuaSilly.webp" alt="" style="width:150px;"></div>
 
-<!-- Skateboard Killua -->
-<div class="skater"><img src="images/skatingKillua.webp" alt="this is a skating killua" style="width: 100px;"></div>
+<!-- Skating Killua -->
+<div class="skater"><img src="images/skatingKillua.webp" alt="skating killua" style="width:100px;"></div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><span>Super</span> Development </div>
+  <div class="nav-logo"><span>Super</span> Development</div>
+
+  <!-- Desktop links -->
   <ul class="nav-links">
     <li><a href="#home">Home</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#games">Games</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+
+  <!-- Mobile hamburger -->
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile slide-down menu -->
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#home"    onclick="closeMobileMenu()">Home</a>
+  <a href="#about"   onclick="closeMobileMenu()">About</a>
+  <a href="#games"   onclick="closeMobileMenu()">Games</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
 </nav>
 
 <!-- ============ HOME ============ -->
@@ -544,14 +622,12 @@
   <div class="home-left">
     <p class="home-greeting">HELLO! I'M</p>
     <h1 class="home-name"><span class="accent">Super!</span></h1>
-
     <div class="typewriter-wrap">
       <span class="label">I make: </span>
       <span id="typewriter-text"></span>
     </div>
-
     <div class="home-btns">
-      <a href="#games" class="btn-primary">See my work</a>
+      <a href="#games"   class="btn-primary">See my work</a>
       <a href="#contact" class="btn-secondary">Contact me</a>
     </div>
   </div>
@@ -561,8 +637,7 @@
       <div class="lightning-deco"></div>
       <div class="stats-card-header">
         <div class="killua-avatar">
-          <!-- Replace src with your actual Killua image -->
-          <img src="images/killuaSilly.webp" alt="Killua" />
+          <img src="images/killuaSilly.webp" alt="Killua"/>
         </div>
         <div>
           <div class="stats-card-name">Super</div>
@@ -595,16 +670,12 @@
   <p class="section-subtitle">Who am I? Prob nobody cares but hey read this</p>
 
   <div class="about-intro-card reveal">
-    <div class="about-avatar">
-      <img src="images/me.webp" alt="Me" />
-    </div>
+    <div class="about-avatar"><img src="images/me.webp" alt="Me"/></div>
     <div class="about-text">
       <h3>Hey, I'm Super!</h3>
       <p>
         I'm a 18 Y.O game developer and been one for over 5 years now. I experience in many type of games, starting from simulators
         to combat heavy games. I can do pretty much everything you ask me for.
-        <br/><br/>
-        <!-- Add more about yourself here -->
       </p>
     </div>
   </div>
@@ -683,7 +754,7 @@
         <div class="roadmap-dot" style="background:var(--sky);box-shadow:0 0 10px var(--sky)"></div>
         <div class="roadmap-card" style="border-color:rgba(94,200,250,0.4)">
           <div class="roadmap-year">2026-?</div>
-          <h4><img src="images/pathKillua.webp" alt="" width="75px"> Buliding my future</h4>
+          <h4><img src="images/pathKillua.webp" alt="" width="75px"> Building my future</h4>
           <p>Realized this is my path.</p>
           <span class="roadmap-badge" style="background:rgba(91,200,250,0.25);color:var(--glow)">Currently on the grind.</span>
         </div>
@@ -695,24 +766,19 @@
 
 <!-- ============ GAMES ============ -->
 <section id="games">
-  <div class="section-title"><span class="bolt"><img src="images/killuaSilly.webp" alt="" width="100px"></span> My Games</div>
+  <div class="section-title">
+    <span class="bolt"><img src="images/killuaSilly.webp" alt="" width="100px"></span> My Games
+  </div>
   <p class="section-subtitle">This is all the games or projects I've worked on.</p>
 
   <div class="games-slider-wrapper">
     <div class="games-slider" id="gamesSlider">
 
-      <!-- GAME CARD 1 — Edit these! -->
-
-      <!-- GAME CARD 3 -->
       <div class="game-card">
         <a class="game-card-link" href="https://www.roblox.com/games/133310592756716/Omni-Battlegrounds" target="_blank">
           <div class="game-card-overlay">▶ Open Game</div>
-          <div class="game-card-img">
-            <img src="images/omniBattlegrounds2.webp" alt="Game 1">
-          </div>
-          <div class="killua-mini">
-            <img src="images/killuaSilly.webp" alt="Killua"> 
-          </div>
+          <div class="game-card-img"><img src="images/omniBattlegrounds2.webp" alt="Omni Battlegrounds"></div>
+          <div class="killua-mini"><img src="images/killuaSilly.webp" alt="Killua"></div>
           <div class="game-card-body">
             <div class="game-title">Omni Battlegrounds</div>
             <div class="game-platform"><span class="platform-dot"></span> Play on Roblox</div>
@@ -720,16 +786,11 @@
         </a>
       </div>
 
-      <!-- GAME CARD 4 -->
       <div class="game-card">
         <a class="game-card-link" href="https://www.roblox.com/games/94829677822882/Nen-Arena" target="_blank" rel="noopener">
           <div class="game-card-overlay">▶ Open Game</div>
-          <div class="game-card-img">
-           <img src="images/nenArenaImage.webp" alt="Game 1">
-          </div>
-          <div class="killua-mini">
-            <img src="images/killuaSilly.webp" alt="Killua"> 
-          </div>
+          <div class="game-card-img"><img src="images/nenArenaImage.webp" alt="Nen Arena"></div>
+          <div class="killua-mini"><img src="images/killuaSilly.webp" alt="Killua"></div>
           <div class="game-card-body">
             <div class="game-title">Nen Arena</div>
             <div class="game-platform"><span class="platform-dot"></span> Play on Roblox</div>
@@ -737,15 +798,11 @@
         </a>
       </div>
 
-       <div class="game-card is-coming-soon">
+      <div class="game-card is-coming-soon">
         <a class="game-card-link" target="_blank" rel="noopener">
           <div class="game-card-overlay">Coming soon...</div>
-          <div class="game-card-img">
-           <img src="images/battlegroundsBottomImage.webp" alt="Game 1">
-          </div>
-          <div class="killua-mini">
-            <img src="images/killuaSilly.webp" alt="Killua"> 
-          </div>
+          <div class="game-card-img"><img src="images/battlegroundsBottomImage.webp" alt="Battlegrounds Bottom"></div>
+          <div class="killua-mini"><img src="images/killuaSilly.webp" alt="Killua"></div>
           <div class="game-card-body">
             <div class="game-title">Battlegrounds Bottom</div>
             <div class="game-platform"><span class="platform-dot"></span> Coming soon...</div>
@@ -756,12 +813,8 @@
       <div class="game-card is-coming-soon">
         <a class="game-card-link" target="_blank" rel="noopener">
           <div class="game-card-overlay">Coming soon...</div>
-          <div class="game-card-img">
-            <img src="images/stardustLegacy.webp" alt="Game 1">
-          </div>
-          <div class="killua-mini">
-            <img src="images/killuaSilly.webp" alt="Killua"> 
-          </div>
+          <div class="game-card-img"><img src="images/stardustLegacy.webp" alt="Stardust Legacy"></div>
+          <div class="killua-mini"><img src="images/killuaSilly.webp" alt="Killua"></div>
           <div class="game-card-body">
             <div class="game-title">Stardust Legacy</div>
             <div class="game-platform"><span class="platform-dot"></span> Coming soon...</div>
@@ -769,16 +822,11 @@
         </a>
       </div>
 
-      <!-- GAME CARD 5 -->
       <div class="game-card is-coming-soon">
         <a class="game-card-link" target="_blank" rel="noopener">
           <div class="game-card-overlay">Coming soon...</div>
-          <div class="game-card-img">
-            ?
-          </div>
-          <div class="killua-mini">
-            <img src="images/killuaSilly.webp" alt="Killua"> 
-          </div>
+          <div class="game-card-img">?</div>
+          <div class="killua-mini"><img src="images/killuaSilly.webp" alt="Killua"></div>
           <div class="game-card-body">
             <div class="game-title">Secret Project</div>
             <div class="game-platform"><span class="platform-dot"></span> Coming soon</div>
@@ -802,19 +850,20 @@
   <p class="section-subtitle">I don't bite I swear</p>
 
   <div class="discord-card reveal">
-    <div class="discord-icon"><span><img src="images/discordLogo.webp" alt="" width="50px"></span></div>
+    <div class="discord-icon"><img src="images/discordLogo.webp" alt="" width="50px"></div>
     <h3>DISCORD</h3>
     <p>
-      If you have a project, great funding and need a goated scripter to bring your idea to life, contact me on Discord, we'll work it out!
+      If you have a project, great funding and need a goated scripter to bring your idea to life,
+      contact me on Discord, we'll work it out!
     </p>
     <a href="https://discord.gg/H2fZgCVkqu" target="_blank" rel="noopener" class="btn-discord">
-      <span><img src="images/discordLogo.webp" alt="" width="50px"></span> Join my Discord
+      <img src="images/discordLogo.webp" alt="" width="22px"> Join my Discord
     </a>
   </div>
 </section>
 
 <footer>
-  <h4><img src="images/killuaSilly.webp" alt="" width="25px">SUPER</h4>
+  <h4><img src="images/killuaSilly.webp" alt="" width="25px"> SUPER</h4>
   Programming your ideas to life on Roblox &nbsp;|&nbsp; Super © 2025. All rights reserved.
 </footer>
 
@@ -830,50 +879,50 @@ document.addEventListener('keydown', e => {
     (e.metaKey && e.altKey && e.key.toLowerCase() === 'i')
   ) { e.preventDefault(); e.stopPropagation(); return false; }
 });
-// Disable text selection on deco elements
 document.querySelectorAll('.lightning-deco,.float-bolt,.skater').forEach(el => {
   el.style.userSelect = 'none';
   el.style.webkitUserSelect = 'none';
 });
 
-/* ========= CUSTOM CURSOR ========= */
-const cursor = document.getElementById('cursor');
-document.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
+/* ========= HAMBURGER MENU ========= */
+const hamburger  = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  const open = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open', open);
+  hamburger.setAttribute('aria-expanded', open);
 });
-document.addEventListener('mousedown', () => cursor.classList.add('clicked'));
-document.addEventListener('mouseup', () => cursor.classList.remove('clicked'));
+
+function closeMobileMenu() {
+  mobileMenu.classList.remove('open');
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', false);
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', e => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+
+/* ========= CUSTOM CURSOR (desktop only) ========= */
+const cursor = document.getElementById('cursor');
+if (window.matchMedia('(pointer:fine)').matches) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mousedown', () => cursor.classList.add('clicked'));
+  document.addEventListener('mouseup',   () => cursor.classList.remove('clicked'));
+}
 
 /* ========= LIGHTNING CANVAS ========= */
 const canvas = document.getElementById('lightning-canvas');
-const ctx = canvas.getContext('2d');
+const ctx    = canvas.getContext('2d');
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-
-function drawBolt(x1,y1,x2,y2,branches,alpha) {
-  if (branches === 0) return;
-  ctx.strokeStyle = `rgba(91,200,250,${alpha})`;
-  ctx.lineWidth = branches * 0.6;
-  ctx.beginPath(); ctx.moveTo(x1,y1);
-  const mx = (x1+x2)/2 + (Math.random()-0.5)*60;
-  const my = (y1+y2)/2 + (Math.random()-0.5)*60;
-  ctx.quadraticCurveTo(mx,my,x2,y2);
-  ctx.stroke();
-  if (Math.random() > 0.55) {
-    const bx = x2 + (Math.random()-0.5)*80;
-    const by = y2 + Math.random()*80;
-    drawBolt(x2,y2,bx,by,branches-1,alpha*0.6);
-  }
-}
-
-function flashLightning() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const x = Math.random()*canvas.width;
-  //drawBolt(x,0,x+(Math.random()-0.5)*120,canvas.height*0.6+Math.random()*canvas.height*0.3,5,0.9);
-  setTimeout(()=>ctx.clearRect(0,0,canvas.width,canvas.height),80);
-}
-//setInterval(flashLightning, 3500 + Math.random()*2000);
 
 /* ========= TYPEWRITER ========= */
 const texts = [
@@ -886,7 +935,6 @@ const texts = [
 ];
 let ti = 0, ci = 0, deleting = false;
 const tw = document.getElementById('typewriter-text');
-
 function type() {
   const current = texts[ti];
   if (!deleting) {
@@ -914,7 +962,6 @@ function animateCounters() {
     }, 35);
   });
 }
-// Trigger on home visible
 const homeObs = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) { animateCounters(); homeObs.disconnect(); }
 }, { threshold: 0.3 });
@@ -934,73 +981,86 @@ document.querySelectorAll('.skills-section').forEach(s => skillObs.observe(s));
 
 /* ========= SCROLL REVEAL ========= */
 const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
 /* ========= GAMES SLIDER ========= */
 const slider = document.getElementById('gamesSlider');
-const cards = slider.querySelectorAll('.game-card');
-const CARD_W = 280 + 28; // card width + gap
-let currentIdx = 0;
-const visibleCount = () => Math.floor(slider.parentElement.offsetWidth / CARD_W) || 1;
-const maxIdx = () => Math.max(0, cards.length - visibleCount());
-
-// Dots
+const cards  = slider.querySelectorAll('.game-card');
 const dotsWrap = document.getElementById('sliderDots');
+let currentIdx = 0;
+
+function cardWidth() {
+  // Use the actual rendered card width + gap
+  const card = cards[0];
+  const gap  = parseInt(getComputedStyle(slider).gap) || 28;
+  return card.offsetWidth + gap;
+}
+const visibleCount = () => Math.max(1, Math.floor(slider.parentElement.offsetWidth / cardWidth()));
+const maxIdx       = () => Math.max(0, cards.length - visibleCount());
 
 function renderDots() {
-  dotsWrap.innerHTML = ''; 
-  const totalDots = maxIdx() + 1; 
-  
-  for (let i = 0; i < totalDots; i++) {
+  dotsWrap.innerHTML = '';
+  const total = maxIdx() + 1;
+  for (let i = 0; i < total; i++) {
     const d = document.createElement('div');
     d.className = 'dot' + (i === currentIdx ? ' active' : '');
     d.addEventListener('click', () => goTo(i));
     dotsWrap.appendChild(d);
   }
 }
-
-// Generate the dots on load
 renderDots();
 
 function updateDots() {
   dotsWrap.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===currentIdx));
 }
-
 function goTo(idx) {
   currentIdx = Math.max(0, Math.min(idx, maxIdx()));
-  slider.style.transform = `translateX(-${currentIdx * CARD_W}px)`;
+  slider.style.transform = `translateX(-${currentIdx * cardWidth()}px)`;
   updateDots();
 }
 
 document.getElementById('prevBtn').addEventListener('click', () => goTo(currentIdx-1));
 document.getElementById('nextBtn').addEventListener('click', () => goTo(currentIdx+1));
-window.addEventListener('resize', () => goTo(Math.min(currentIdx, maxIdx())));
+window.addEventListener('resize', () => { renderDots(); goTo(Math.min(currentIdx, maxIdx())); });
 
-// Drag / swipe
+/* Drag / swipe (works on both mouse and touch) */
 let startX = 0, isDragging = false, startTransform = 0;
-slider.addEventListener('pointerdown', e => {
-  isDragging = true; startX = e.clientX;
-  startTransform = currentIdx * CARD_W;
-  //slider.setPointerCapture(e.pointerId);
+
+function onStart(clientX) {
+  isDragging = true;
+  startX = clientX;
+  startTransform = currentIdx * cardWidth();
   slider.style.transition = 'none';
-});
-slider.addEventListener('pointermove', e => {
+}
+function onMove(clientX) {
   if (!isDragging) return;
-  const dx = e.clientX - startX;
-  slider.style.transform = `translateX(${-startTransform + dx}px)`;
-});
-slider.addEventListener('pointerup', e => {
+  slider.style.transform = `translateX(${-startTransform + (clientX - startX)}px)`;
+}
+function onEnd(clientX) {
   if (!isDragging) return;
   isDragging = false;
   slider.style.transition = '';
-  const dx = e.clientX - startX;
-  if (Math.abs(dx) > 60) goTo(currentIdx + (dx < 0 ? 1 : -1));
+  const dx = clientX - startX;
+  if (Math.abs(dx) > 50) goTo(currentIdx + (dx < 0 ? 1 : -1));
   else goTo(currentIdx);
-});
+}
 
-// Prevent click on drag
+// Mouse
+slider.addEventListener('mousedown',  e => onStart(e.clientX));
+slider.addEventListener('mousemove',  e => onMove(e.clientX));
+slider.addEventListener('mouseup',    e => onEnd(e.clientX));
+slider.addEventListener('mouseleave', e => { if (isDragging) onEnd(e.clientX); });
+
+// Touch
+slider.addEventListener('touchstart', e => { onStart(e.touches[0].clientX); }, { passive: true });
+slider.addEventListener('touchmove',  e => { onMove(e.touches[0].clientX); },  { passive: true });
+slider.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
+
+// Block click on drag
 slider.addEventListener('click', e => {
   if (Math.abs(e.clientX - startX) > 5) e.preventDefault();
 }, true);
